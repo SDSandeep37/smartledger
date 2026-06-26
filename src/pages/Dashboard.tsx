@@ -1,5 +1,7 @@
+import CompanyRegister from "../components/CompanyRegister/CompanyRegister";
+
 const Dashboard = () => {
-  return <div>Dashboard</div>;
+  return <CompanyRegister></CompanyRegister>;
 };
 
 export default Dashboard;
