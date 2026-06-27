@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 type FormData = {
   company_name: string;
   address: string;
@@ -10,10 +11,15 @@ type FormData = {
   pan_number: string;
   financial_year_start: string;
   financial_year_end: string;
+  // gst_number: string | "";
+  // pan_number: string | "";
+  // financial_year_start: string | "";
+  // financial_year_end: string | "";
   phone: string;
   email: string;
 };
-const CompanyRegister = () => {
+const CompanyEdit = () => {
+  const { id } = useParams<{ id: string }>();
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [formData, setFormData] = useState<FormData>({
@@ -30,6 +36,29 @@ const CompanyRegister = () => {
     phone: "",
     email: "",
   });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!id) return;
+
+    getCompanyDetails();
+  }, [id]);
+  const getCompanyDetails = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_PUBLIC_API_URL}/company/${id}/company`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+      const data = await response.json();
+
+      setFormData(data.company);
+    } catch (error) {
+      console.error("Search failed:", error);
+    }
+  };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -70,10 +99,12 @@ const CompanyRegister = () => {
     try {
       setMessageType("");
       setMessage("Please wait...");
+      console.log(formData.financial_year_start);
+      console.log(formData.financial_year_end);
       const response = await fetch(
-        `${import.meta.env.VITE_PUBLIC_API_URL}/company/create`,
+        `${import.meta.env.VITE_PUBLIC_API_URL}/company/${id}/update`,
         {
-          method: "POST",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             company_name: formData.company_name,
@@ -86,7 +117,7 @@ const CompanyRegister = () => {
             pan_number: formData.pan_number,
             financial_year_start: formData.financial_year_start,
             financial_year_end: formData.financial_year_end,
-            phone: "+91" + formData.phone,
+            phone: formData.phone,
             email: formData.email,
           }),
           credentials: "include",
@@ -102,20 +133,8 @@ const CompanyRegister = () => {
       if (result.success) {
         setMessageType("success");
         setMessage(result.message);
-        setFormData({
-          company_name: "",
-          address: "",
-          city: "",
-          state: "",
-          country: "",
-          pincode: "",
-          gst_number: "",
-          pan_number: "",
-          financial_year_start: "",
-          financial_year_end: "",
-          phone: "",
-          email: "",
-        });
+        setFormData(result.company);
+        navigate(0);
       }
     } catch (error) {
       console.error("Company registeration failed:", error);
@@ -131,8 +150,9 @@ const CompanyRegister = () => {
     { label: "State", name: "state" },
     { label: "Country", name: "country" },
   ];
+
   return (
-    <div className="bg-[url(/background.png)] min-h-screen flex items-center justify-center bg-linear-to-br from-[#0D1117] via-[#1E293B] to-[#0D1117] text-white">
+    <div className="bg-[url(/background.png)] mt-10 flex items-center justify-center bg-linear-to-br from-[#0D1117] via-[#1E293B] to-[#0D1117] text-white">
       <div className="w-full max-w-3xl p-8 rounded-xl bg-[#1E293B]/60 backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.3)]">
         {/* Logo & Heading */}
         <div className="text-center mb-8 ">
@@ -143,7 +163,7 @@ const CompanyRegister = () => {
           <p className="text-gray-400 text-sm mt-1">
             ERP Simplified. Business Amplified.
           </p>
-          <h2 className="text-2xl font-semibold mt-6">Register Your Company</h2>
+          <h2 className="text-2xl font-semibold mt-6">Edit Your Company</h2>
           <p className="text-gray-400 text-sm">
             Provide your company details to get started.
           </p>
@@ -230,7 +250,11 @@ const CompanyRegister = () => {
                   type={type}
                   name={name}
                   onChange={handleChange}
-                  value={formData[name as keyof typeof formData]}
+                  value={
+                    formData[name as keyof typeof formData]
+                      ? formData[name as keyof typeof formData]
+                      : ""
+                  }
                   className="w-full mt-1 p-3 rounded-md bg-[#0D1117]/60 border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                   placeholder={label}
                 />
@@ -250,7 +274,11 @@ const CompanyRegister = () => {
                   type="date"
                   name={name}
                   onChange={handleChange}
-                  value={formData[name as keyof typeof formData]}
+                  value={
+                    formData[name as keyof typeof formData]
+                      ? formData[name as keyof typeof formData]
+                      : ""
+                  }
                   className="w-full mt-1 p-3 rounded-md bg-[#0D1117]/60 border border-gray-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none"
                 />
               </div>
@@ -300,13 +328,19 @@ const CompanyRegister = () => {
               type="submit"
               className="cursor-pointer w-full py-3 rounded-md bg-linear-to-r from-orange-500 to-blue-600 font-semibold hover:opacity-90 transition"
             >
-              Register
+              Update
             </button>
           </div>
         </form>
+        <div className="dashboardShortcutMenu p-2">
+          <button className="bg-(--accent-orange) px-2 p-1  shadow-lg text-sm rounded-2xl">
+            F4
+          </button>{" "}
+          <span className="text-[10px] underline">To close</span>
+        </div>
       </div>
     </div>
   );
 };
 
-export default CompanyRegister;
+export default CompanyEdit;

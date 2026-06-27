@@ -8,6 +8,7 @@ import {
   FiLogOut,
   FiSettings,
 } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const menuItems = [
   { label: "Dashboard", icon: FiGrid, active: true },
@@ -48,25 +49,30 @@ const Sidebar = ({ sidebarOpen }: SidebarProps) => {
       </div>
 
       <nav className="flex-1 space-y-2 px-3 py-5">
-        {menuItems.map((item) => {
+        {menuItems.map((item, index) => {
           const Icon = item.icon;
 
           return (
-            <button
+            <Link
+              to={item.label === "Dashboard" ? "" : item.label.toLowerCase()}
               key={item.label}
-              className={`flex h-10 w-full items-center gap-3 rounded px-3 text-sm transition ${
-                item.active
-                  ? "bg-orange-500/20 text-orange-300 shadow-[inset_3px_0_0_#f97316]"
-                  : "text-slate-300 hover:bg-white/7 hover:text-white"
-              } ${sidebarOpen ? "justify-start" : "justify-center"}`}
-              title={sidebarOpen ? undefined : item.label}
-              type="button"
             >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span className={sidebarOpen ? "block" : "hidden"}>
-                {item.label}
-              </span>
-            </button>
+              <button
+                key={item.label + index}
+                className={`flex h-10 w-full items-center gap-3 rounded px-3 text-sm transition ${
+                  item.active
+                    ? "bg-orange-500/20 text-orange-300 shadow-[inset_3px_0_0_#f97316]"
+                    : "text-slate-300 hover:bg-white/7 hover:text-white"
+                } ${sidebarOpen ? "justify-start" : "justify-center"}`}
+                title={sidebarOpen ? undefined : item.label}
+                type="button"
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className={sidebarOpen ? "block" : "hidden"}>
+                  {item.label}
+                </span>
+              </button>
+            </Link>
           );
         })}
       </nav>

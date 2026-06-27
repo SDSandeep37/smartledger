@@ -64,7 +64,7 @@ const Login = () => {
       setMessageType("success");
       setMessage(result.message);
 
-      navigate("/smartlegder");
+      navigate("/smartledger");
     } catch (error) {
       console.error("Login failed:", error);
       setMessageType("error");

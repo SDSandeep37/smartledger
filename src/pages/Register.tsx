@@ -90,7 +90,7 @@ const Register = () => {
         });
       }
 
-      navigate("/smartlegder");
+      navigate("/smartledger");
     } catch (error) {
       console.error("Register failed:", error);
       setMessageType("error");
