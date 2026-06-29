@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   FiBarChart2,
   FiBookOpen,
@@ -9,6 +10,7 @@ import {
   FiSettings,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { UserAuthContext } from "../../Contexts/AuthContext";
 
 const menuItems = [
   { label: "Dashboard", icon: FiGrid, active: true },
@@ -24,6 +26,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen }: SidebarProps) => {
+  const { logout } = useContext(UserAuthContext)!;
   return (
     <aside
       className={`absolute inset-y-0 left-0 z-30 flex flex-col border-r border-white/10 bg-[#0a0a1d]/95 transition-all duration-300 lg:relative ${
@@ -79,7 +82,8 @@ const Sidebar = ({ sidebarOpen }: SidebarProps) => {
 
       <div className="border-t border-white/10 px-3 py-5">
         <button
-          className={`flex h-10 w-full items-center gap-3 rounded px-3 text-sm text-slate-300 transition hover:bg-white/7 hover:text-white ${
+          onClick={() => logout()}
+          className={`cursor-pointer flex h-10 w-full items-center gap-3 rounded px-3 text-sm text-slate-300 transition hover:bg-white/7 hover:text-white ${
             sidebarOpen ? "justify-start" : "justify-center"
           }`}
           type="button"
