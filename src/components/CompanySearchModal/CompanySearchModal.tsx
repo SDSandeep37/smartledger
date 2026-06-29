@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 interface CompanyDetailsProps {
   id: string;
@@ -9,6 +9,13 @@ const CompanySearchModal = ({ onClose }: any) => {
   const [results, setResults] = useState<CompanyDetailsProps[]>([]);
   const [loading, setLoading] = useState(false);
 
+  //refrence to input
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  //focus on input tag when modal mounts
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
   const handleSearch = async () => {
     if (!query.trim()) return;
     setLoading(true);
@@ -56,6 +63,7 @@ const CompanySearchModal = ({ onClose }: any) => {
         {/* Search Input */}
         <div className="flex space-x-2 mb-4">
           <input
+            ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}

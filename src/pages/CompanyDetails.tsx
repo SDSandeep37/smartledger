@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UserAuthContext } from "../Contexts/AuthContext";
 import CompanyEdit from "../components/CompanyEdit/CompanyEdit";
 interface Company {
@@ -27,6 +27,7 @@ const CompanyDetails = () => {
   const [error, setError] = useState("");
   const { user } = useContext(UserAuthContext)!;
   const [showEdit, setShowEdit] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -37,6 +38,11 @@ const CompanyDetails = () => {
       if (event.key == "F4") {
         setShowEdit(false);
         event.preventDefault();
+      }
+      if (event.ctrlKey && event.key.toLowerCase() === "m") {
+        deleteCompany();
+        event.preventDefault();
+        return;
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -65,6 +71,32 @@ const CompanyDetails = () => {
 
     fetchCompanyDetails();
   }, [id]);
+  const deleteCompany = async () => {
+    if (!id) return;
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_PUBLIC_API_URL}/company/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete company: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        alert(data.message);
+        navigate("/smartledger");
+      }
+    } catch (error) {
+      console.error("Delete failed:", error);
+      throw error;
+    }
+  };
 
   if (loading)
     return (
@@ -89,10 +121,10 @@ const CompanyDetails = () => {
 
   return (
     <>
-      <div className="bg-[url(/background.png)]   flex items-center justify-center bg-linear-to-br from-[#0D1117] via-[#1E293B] to-[#0D1117] text-white">
+      <div className="bg-[url(/background.png)]  p-8  flex items-center justify-center bg-linear-to-br from-[#0D1117] via-[#1E293B] to-[#0D1117] text-white">
         <div className="w-full max-w-4xl p-8 rounded-xl bg-[#1E293B]/60 backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.3)]">
           {/* Header */}
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-8 flex-wrap">
             <div>
               <h1 className="text-3xl font-bold">
                 <span className="text-orange-500">Smart</span>
@@ -164,18 +196,28 @@ const CompanyDetails = () => {
         </div> */}
 
           {/* Footer Buttons */}
-          <div className="flex justify-end space-x-3 mt-8">
+          <div className="flex justify-end space-x-3 mt-8 flex-wrap">
             {user?.id === company.user_id ? (
-              <div className="flex justify-center items-center gap-1">
+              <div className="flex justify-center items-center gap-1 flex-wrap">
                 <button
                   onClick={() => setShowEdit(true)}
-                  className="px-5 py-2 rounded-md bg-linear-to-r from-orange-500 to-blue-600 font-semibold hover:opacity-90 transition"
+                  className="cursor-pointer px-5 py-2 rounded-md bg-linear-to-r from-orange-500 to-blue-600 font-semibold hover:opacity-90 transition"
                 >
                   Edit
                 </button>
                 OR press
                 <button className="bg-(--accent-orange) px-2 p-1  shadow-lg text-sm rounded-2xl">
                   F3
+                </button>{" "}
+                <button
+                  onClick={() => deleteCompany()}
+                  className="cursor-pointer w-20 py-2 rounded-md bg-linear-to-r from-red-500 to-orange-600 font-semibold hover:opacity-90 transition"
+                >
+                  Delete
+                </button>
+                OR press
+                <button className="bg-(--accent-orange) px-2 p-1  shadow-lg text-sm rounded-2xl">
+                  ctrl+m
                 </button>{" "}
               </div>
             ) : (

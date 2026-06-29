@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { UserAuthContext } from "../Contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -7,7 +8,7 @@ const Login = () => {
   const [messageType, setMessageType] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-
+  const { refreshUser } = useContext(UserAuthContext)!;
   const timer = () => {
     setTimeout(() => {
       setMessage("");
@@ -63,7 +64,7 @@ const Login = () => {
       }
       setMessageType("success");
       setMessage(result.message);
-
+      await refreshUser();
       navigate("/smartledger");
     } catch (error) {
       console.error("Login failed:", error);
