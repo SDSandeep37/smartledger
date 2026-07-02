@@ -10,6 +10,7 @@ import CompanyDetails from "./pages/CompanyDetails";
 import { UserAuthProvider } from "./Contexts/AuthContext";
 import LedgerGroups from "./pages/LedgerGroups";
 import Ledgers from "./pages/Ledger";
+import Units from "./pages/Units";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="company/:id" element={<CompanyDetails />} />
             <Route path="ledger_groups/:id" element={<LedgerGroups />} />
             <Route path="ledgers/:id" element={<Ledgers />} />
+            <Route path="units/:id" element={<Units />} />
           </Route>
         </Routes>
       </UserAuthProvider>

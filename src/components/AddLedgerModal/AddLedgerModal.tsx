@@ -366,7 +366,7 @@ const AddLedgerModal = ({
               type="submit"
               className="cursor-pointer px-5 py-2 rounded-md bg-linear-to-r from-orange-500 to-blue-600 font-semibold hover:opacity-90 transition"
             >
-              Save Group
+              Save Ledger
             </button>
           </div>
         </form>
