@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserAuthContext } from "../Contexts/AuthContext";
 import CompanyEdit from "../components/CompanyEdit/CompanyEdit";
 interface Company {
@@ -179,22 +179,6 @@ const CompanyDetails = () => {
             </div>
           </div>
 
-          {/* Bottom Info Boxes */}
-          {/* <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
-          <div className="p-4 rounded-md bg-linear-to-r from-orange-500/20 to-orange-500/10 border border-orange-500">
-            <p className="text-gray-400">Industry</p>
-            <p className="font-semibold text-white">
-              {company.industry || "Technology & IT Services"}
-            </p>
-          </div>
-          <div className="p-4 rounded-md bg-linear-to-r from-blue-500/20 to-blue-500/10 border border-blue-500">
-            <p className="text-gray-400">Number of Employees</p>
-            <p className="font-semibold text-white">
-              {company.employees || "50 - 100 Employees"}
-            </p>
-          </div>
-        </div> */}
-
           {/* Footer Buttons */}
           <div className="flex justify-end space-x-3 mt-8 flex-wrap">
             {user?.id === company.user_id ? (
@@ -230,6 +214,22 @@ const CompanyDetails = () => {
             >
               Back
             </button>
+          </div>
+          {/* navigaton for other pages */}
+          <div className="company-option-nav w-full mt-3.5">
+            <ul className="w-full flex gap-3 items-center justify-center">
+              <li className="text-(--text-primary) transition-all duration-300 ease-in-out hover:text-(--accent-blue)">
+                <Link to={`/smartledger/ledger_groups/${company.id}`}>
+                  Ledger Groups
+                </Link>
+              </li>
+              <li className="text-(--text-primary) transition-all duration-300 ease-in-out hover:text-(--accent-blue)">
+                <Link to={`/smartledger/ledgers/${company.id}`}>Ledgers</Link>
+              </li>
+              <li className="text-(--text-primary) transition-all duration-300 ease-in-out hover:text-(--accent-blue)">
+                <Link to={`/smartledger/units/${company.id}`}>Units</Link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

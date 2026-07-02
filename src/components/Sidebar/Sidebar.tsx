@@ -2,23 +2,25 @@ import { useContext } from "react";
 import {
   FiBarChart2,
   FiBookOpen,
-  FiBox,
+  // FiBox,
   FiCreditCard,
   FiFileText,
   FiGrid,
   FiLogOut,
   FiSettings,
 } from "react-icons/fi";
+import { ImBooks } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { UserAuthContext } from "../../Contexts/AuthContext";
 
 const menuItems = [
-  { label: "Dashboard", icon: FiGrid, active: true },
-  { label: "Ledgers", icon: FiBookOpen },
-  { label: "Vouchers", icon: FiCreditCard },
-  { label: "Inventory", icon: FiBox },
-  { label: "Reports", icon: FiFileText },
-  { label: "Settings", icon: FiSettings },
+  { label: "Dashboard", icon: FiGrid, active: true, link: "" },
+  { label: "Ledger Groups", icon: ImBooks, link: "ledger_groups" },
+  { label: "Ledgers", icon: FiBookOpen, link: "ledgers" },
+  { label: "Vouchers", icon: FiCreditCard, link: "vouchers" },
+  // { label: "Inventory", icon: FiBox,link:"in" },
+  { label: "Reports", icon: FiFileText, link: "reports" },
+  { label: "Settings", icon: FiSettings, link: "settings" },
 ];
 
 interface SidebarProps {
@@ -56,10 +58,7 @@ const Sidebar = ({ sidebarOpen }: SidebarProps) => {
           const Icon = item.icon;
 
           return (
-            <Link
-              to={item.label === "Dashboard" ? "" : item.label.toLowerCase()}
-              key={item.label}
-            >
+            <Link to={item.link} key={item.label}>
               <button
                 key={item.label + index}
                 className={`flex h-10 w-full items-center gap-3 rounded px-3 text-sm transition ${
